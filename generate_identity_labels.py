@@ -117,11 +117,9 @@ if __name__ == "__main__":
         for category_index, category in enumerate(categories):
             positions = identity_label_positions[category_index]
 
-            json_annotations.append(get_coco_format(current_id, img_index + 1, category_index + 1, positions))
+            json_annotations.append(get_coco_format(current_id, img_index + 1, category["id"], positions))
 
             current_id += 1
-
-        break
 
     json_annotations = json.dumps(json_annotations)
     writer = open("test.json", "w+")
