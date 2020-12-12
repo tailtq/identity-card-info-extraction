@@ -30,9 +30,9 @@ categories = [
     }
 ]
 identity_label_positions = [
-    [(240, 68), (451, 102)],  # identity number
-    [(150, 96), (496, 159)],  # name
-    [(151, 158), (458, 188)],  # birthday
+    [(261, 69), (451, 97)],  # identity number
+    [(249, 100), (459, 130)],  # name
+    [(307, 162), (409, 187)],  # birthday
     [(151, 188), (498, 243)],  # countryside
     [(154, 240), (498, 297)]  # current address
 ]
@@ -125,3 +125,16 @@ if __name__ == "__main__":
     writer = open("test.json", "w+")
     writer.write(json_annotations)
     writer.close()
+
+    # img_paths = glob.glob("dataset/train2/65714583_2267212970262502_1702528472108236800_o.jpg")
+    #
+    # for path in img_paths:
+    #     print(path)
+    #
+    #     img = cv2.imread(path)
+    #     img = append_positions(img, positions=identity_label_positions)
+    #     key = show_image(img)
+    #     print(rectangles)
+    #
+    #     if key == ord("q"):
+    #         break
