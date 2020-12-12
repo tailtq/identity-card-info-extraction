@@ -1,20 +1,42 @@
+import numpy as np
 import cv2
-import os
 import glob
+import json
 
 WINDOW_NAME = "example"
 rectangles = []
 pivots = []
 
-# identity_label_positions = [
-#     [(234, 71), (445, 99)],  # identity number
-#     [(147, 109), (480, 158)],  # name
-#     [(150, 163), (415, 187)],  # birthday
-#     [(153, 192), (484, 244)],  # countryside
-#     [(155, 246), (481, 298)]  # current address
-# ]
-
-identity_label_positions = [[(240, 68), (451, 102)], [(150, 96), (496, 159)], [(151, 158), (458, 188)], [(151, 188), (498, 243)], [(154, 240), (498, 297)]]
+categories = [
+    {
+        "id": 5,
+        "name": "identity number",
+    },
+    {
+        "id": 1,
+        "name": "name",
+    },
+    {
+        "id": 2,
+        "name": "birthday",
+    },
+    {
+        "id": 3,
+        "name": "countryside",
+    },
+    {
+        "id": 4,
+        "name": "address",
+    }
+]
+identity_label_positions = [
+    [(240, 68), (451, 102)],  # identity number
+    [(150, 96), (496, 159)],  # name
+    [(151, 158), (458, 188)],  # birthday
+    [(151, 188), (498, 243)],  # countryside
+    [(154, 240), (498, 297)]  # current address
+]
+json_annotations = []
 
 
 def set_draw_event(event, x, y, flags, param):
@@ -47,17 +69,61 @@ def show_image(img):
     return cv2.waitKey(-1)
 
 
+def get_bbox(positions):
+    x1, y1 = positions[0]
+    x2, y2 = positions[1]
+    # tl tr br bl
+    point_1 = (x1, y1)
+    point_2 = (x2, y1)
+    point_3 = (x2, y2)
+    point_4 = (x1, y2)
+
+    points = np.array([point_1, point_2, point_3, point_4], dtype=float)
+
+    return points.reshape((8,)).tolist()
+
+
+def get_bbox_info(positions):
+    x1, y1 = positions[0]
+    x2, y2 = positions[1]
+    width, height = float(x2 - x1), float(y2 - y1)
+
+    return float(x1), float(y1), width, height
+
+
+def get_coco_format(id, img_id, category_id, positions):
+    # calculate area
+    bbox_info = get_bbox_info(positions)
+
+    return {
+        "id": id,
+        "image_id": img_id,
+        "category_id": category_id,
+        "segmentation": [get_bbox(positions)],
+        "area": bbox_info[2] * bbox_info[3],
+        "bbox": bbox_info,
+        "iscrowd": 0,
+        "attributes": {
+            "occluded": False
+        }
+    }
+
+
 if __name__ == "__main__":
-    img_paths = glob.glob("dataset/train2/*.jpg")
-    # img_paths = glob.glob("dataset/train2/130307241_3454203954699208_4550129914180224305_o.jpg")
+    img_paths = glob.glob("dataset/train/*.jpg")
+    current_id = 1
 
-    for path in img_paths:
-        print(path)
+    for img_index, path in enumerate(img_paths):
+        for category_index, category in enumerate(categories):
+            positions = identity_label_positions[category_index]
 
-        img = cv2.imread(path)
-        img = append_positions(img, positions=identity_label_positions)
-        key = show_image(img)
-        print(rectangles)
+            json_annotations.append(get_coco_format(current_id, img_index + 1, category_index + 1, positions))
 
-        if key == ord("q"):
-            break
+            current_id += 1
+
+        break
+
+    json_annotations = json.dumps(json_annotations)
+    writer = open("test.json", "w+")
+    writer.write(json_annotations)
+    writer.close()
