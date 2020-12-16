@@ -122,7 +122,7 @@ if __name__ == "__main__":
             current_id += 1
 
     json_annotations = json.dumps(json_annotations)
-    writer = open("test.json", "w+")
+    writer = open("annotations.json", "w+")
     writer.write(json_annotations)
     writer.close()
 

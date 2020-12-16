@@ -245,3 +245,5 @@ crashlytics-build.properties
 fabric.properties
 
 dataset
+extract-information-from-identity-card
+*.pth
