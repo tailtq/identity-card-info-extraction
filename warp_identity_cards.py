@@ -1,15 +1,9 @@
-<<<<<<< HEAD
 import os
+import shutil
 
 import torch
 import cv2
 import numpy as np
-import shutil
-=======
-import torch
-import cv2
-import numpy as np
->>>>>>> bf97ba56f92a1f5dcd6d1467a4d19c887c186cae
 
 from utils.common import predict
 from utils.datasets import letterbox
@@ -61,7 +55,6 @@ def filter_redundancy(result):
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
     img_paths = glob.glob("dataset/new/*.jpg") + glob.glob("dataset/train/*.jpg") + glob.glob("dataset/val/*.jpg")
 
     # move new images
@@ -69,23 +62,6 @@ if __name__ == "__main__":
     # for path in img_paths:
     #     shutil.move(path, "dataset/new/")
     # exit()
-=======
-    # img_paths = [
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/79264831_286545146113930_828060348360896700_n.jpg",
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/116877159_1435203079998891_6028139863885058349_o.jpg",
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/117318540_2809040456087598_2738028421387100587_o.jpg",
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/118307718_1736784009801883_1582723575204110433_o.jpg",
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/120824993_2122653444536234_6475328231762928517_o.jpg",
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/121165699_398771897950390_536462256354323293_n.jpg",
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/123627543_804436970124570_5995818117609883973_o.jpg",
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/124452271_2761201874099751_6285653450438406786_o.jpg",
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/125441372_1728726990626718_7132090835273990910_o.jpg",
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/125567541_196868535347590_5838072321271085151_o.jpg",
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/126855751_4602813119791275_6063830488949003873_n.jpg",
-    #     "/home/william/Code/machine-learning/identity-card-info-extraction/dataset/train/128808159_208857733951736_3196224123963217693_o.jpg",
-    # ]
-    img_paths = glob.glob("dataset/train/*.jpg")
->>>>>>> bf97ba56f92a1f5dcd6d1467a4d19c887c186cae
 
     for img_path in img_paths:
         img_name = img_path.split('/')[-1]
@@ -105,15 +81,6 @@ if __name__ == "__main__":
             print(f"Failed: {img_path}, number of coordinates: {len(result if result is not None else [])}")
             print('---------------------------------------------------------------------')
 
-<<<<<<< HEAD
-        # plot_img = cv2.cvtColor(plot_img, cv2.COLOR_BGR2RGB)
-        # plot_img = imutils.resize(plot_img, height=500)
-        # cv2.imshow("Test", plot_img)
-        # key = cv2.waitKey(-1)
-        #
-        # if key == ord('q'):
-        #     break
-=======
         plot_img = cv2.cvtColor(plot_img, cv2.COLOR_BGR2RGB)
         plot_img = imutils.resize(plot_img, height=500)
         cv2.imshow("Test", plot_img)
@@ -121,4 +88,3 @@ if __name__ == "__main__":
 
         if key == ord('q'):
             break
->>>>>>> bf97ba56f92a1f5dcd6d1467a4d19c887c186cae

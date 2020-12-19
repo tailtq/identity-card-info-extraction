@@ -55,7 +55,7 @@ def convert_rgb_to_indexed_colors(img, color_map, destination):
 def get_color_map():
     color_map = []
 
-    data = open("dataset/segmentation/labelmap.txt", "r").read()
+    data = open("dataset/segmentation2/labelmap.txt", "r").read()
     lines = data.split("\n")
     lines.pop(0)
     lines.pop(len(lines) - 1)
@@ -67,12 +67,17 @@ def get_color_map():
 
 
 if __name__ == "__main__":
-    # content = open("annotations.json", "r").read()
-    # content = json.loads(content)
+    dataset_path = "dataset/segmentation2"
+    content = open("annotations.json", "r").read()
+    content = json.loads(content)
 
-    # remove_images(content["images"], (1, 57), "dataset/segmentation")
+    # index + 1
+    remove_images(content["images"], (1, 122), dataset_path)
     color_map = get_color_map()
-    files = glob.glob("dataset/segmentation/SegmentationClass/*.png")
+    files = glob.glob(f"{dataset_path}/SegmentationClass/*.png")
+
+    if not os.path.exists(f"{dataset_path}/SegmentationNewClass"):
+        os.mkdir(f"{dataset_path}/SegmentationNewClass")
 
     for file in files:
         new_destination = file.replace("SegmentationClass", "SegmentationNewClass")
