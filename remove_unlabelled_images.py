@@ -52,9 +52,8 @@ def convert_rgb_to_indexed_colors(img, color_map, destination):
     cv2.imwrite(destination, img)
 
 
-def get_color_map():
+def get_color_map(with_label=False):
     color_map = []
-
     data = open("dataset/segmentation2/labelmap.txt", "r").read()
     lines = data.split("\n")
     lines.pop(0)
@@ -63,7 +62,12 @@ def get_color_map():
     for line in lines:
         color_map.append([int(color) for color in line.split(":")[1].split(",")])
 
-    return np.array(color_map)
+    color_map = np.array(color_map)
+
+    if with_label:
+        return color_map, [i for i in range(len(color_map))]
+
+    return color_map
 
 
 if __name__ == "__main__":

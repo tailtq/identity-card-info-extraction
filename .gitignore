@@ -246,4 +246,5 @@ fabric.properties
 
 dataset
 extract-information-from-identity-card
+Newspaper-Optical-Character-Recognition
 *.pth

@@ -5,7 +5,7 @@ import torch
 import cv2
 import numpy as np
 
-from utils.common import predict
+from utils.common import predict_4_corners, load_model
 from utils.datasets import letterbox
 import glob
 import imutils
@@ -55,6 +55,7 @@ def filter_redundancy(result):
 
 
 if __name__ == "__main__":
+    model = load_model("dataset/best-v1.3.pt")
     img_paths = glob.glob("dataset/new/*.jpg") + glob.glob("dataset/train/*.jpg") + glob.glob("dataset/val/*.jpg")
 
     # move new images
@@ -65,7 +66,7 @@ if __name__ == "__main__":
 
     for img_path in img_paths:
         img_name = img_path.split('/')[-1]
-        result, orig_img, plot_img = predict(img_path)
+        result, orig_img, plot_img = predict_4_corners(img_path, model)
 
         # filter redundant points by comparing confidence score
         if len(result) > 4:

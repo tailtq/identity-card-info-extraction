@@ -1,17 +1,18 @@
-from utils.common import predict
+from utils.common import predict_4_corners, load_model
 import glob
 import os
-import shutil
 
 from warp_identity_cards import filter_redundancy
 
 if __name__ == "__main__":
+    model = load_model("dataset/best-v1.3.pt")
+
     img_paths = glob.glob("dataset/train/*.jpg")
     img_paths = list(filter(lambda img_path: not os.path.exists(img_path.replace(".jpg", ".txt")), img_paths))
 
     for img_path in img_paths:
         img_name = img_path.split("/")[-1].split(".")[0]
-        result, orig_img, _ = predict(img_path, None)
+        result, orig_img, _ = predict_4_corners(img_path, model, None)
 
         text = ""
         height, width, _ = orig_img.shape

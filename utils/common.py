@@ -7,21 +7,20 @@ from models.experimental import attempt_load
 from utils.datasets import letterbox
 from utils.general import non_max_suppression, scale_coords, plot_one_box
 
-
-def load_model(path, device):
-    return attempt_load(path, map_location=device)
-
+device = torch.device("cuda:0")
+half = device.type != "cpu"
 
 CATEGORIES = ["top_left", "top_right", "bottom_right", "bottom_left"]
 COLORS = [(66, 135, 245), (194, 66, 245), (250, 52, 72), (111, 250, 52)]
 
-MODEL_PATH = "dataset/best-v1.3.pt"
-device = torch.device("cuda:0")
-model = load_model(MODEL_PATH, device)
-half = device.type != "cpu"
 
-if half:
-    model.half()
+def load_model(path):
+    model = attempt_load(path, map_location=device)
+
+    if half:
+        model.half()
+
+    return model
 
 
 def convert_img(img, device, half, new_size=416):
@@ -39,7 +38,7 @@ def convert_img(img, device, half, new_size=416):
     return img
 
 
-def predict(img_path, resized_width=1080):
+def predict_4_corners(img_path, model, resized_width=1080):
     img = cv2.imread(img_path)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
@@ -48,9 +47,7 @@ def predict(img_path, resized_width=1080):
     else:
         orig_img = img.copy()
 
-    orig_height, orig_width, _ = orig_img.shape
     plot_img = orig_img.copy()
-
     img = convert_img(orig_img, device, half, new_size=480)
     _, _, new_height, new_width = img.size()
 

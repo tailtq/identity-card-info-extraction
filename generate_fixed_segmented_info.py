@@ -3,6 +3,8 @@ import cv2
 import glob
 import json
 
+from utils.segmentation_common import write_annotation_file
+
 WINDOW_NAME = "example"
 rectangles = []
 pivots = []
@@ -121,10 +123,7 @@ if __name__ == "__main__":
 
             current_id += 1
 
-    json_annotations = json.dumps(json_annotations)
-    writer = open("annotations.json", "w+")
-    writer.write(json_annotations)
-    writer.close()
+    write_annotation_file(json_annotations, "annotations.json")
 
     # img_paths = glob.glob("dataset/train2/65714583_2267212970262502_1702528472108236800_o.jpg")
     #
