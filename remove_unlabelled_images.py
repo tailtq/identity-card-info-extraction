@@ -4,6 +4,8 @@ import cv2
 import numpy as np
 import glob
 
+from utils.segmentation_common import get_color_map
+
 
 def remove_images(images: list, keep_range_ids: tuple, dataset_path: str):
     # ImageSets/Segmentation/default.txt
@@ -52,33 +54,16 @@ def convert_rgb_to_indexed_colors(img, color_map, destination):
     cv2.imwrite(destination, img)
 
 
-def get_color_map(with_label=False):
-    color_map = []
-    data = open("dataset/segmentation2/labelmap.txt", "r").read()
-    lines = data.split("\n")
-    lines.pop(0)
-    lines.pop(len(lines) - 1)
-
-    for line in lines:
-        color_map.append([int(color) for color in line.split(":")[1].split(",")])
-
-    color_map = np.array(color_map)
-
-    if with_label:
-        return color_map, [i for i in range(len(color_map))]
-
-    return color_map
-
-
 if __name__ == "__main__":
-    dataset_path = "dataset/segmentation2"
+    dataset_path = "dataset/segmentation"
     content = open("annotations.json", "r").read()
     content = json.loads(content)
 
     # index + 1
-    remove_images(content["images"], (1, 122), dataset_path)
+    remove_images(content["images"], (1, 201), dataset_path)
     color_map = get_color_map()
     files = glob.glob(f"{dataset_path}/SegmentationClass/*.png")
+    print(color_map)
 
     if not os.path.exists(f"{dataset_path}/SegmentationNewClass"):
         os.mkdir(f"{dataset_path}/SegmentationNewClass")

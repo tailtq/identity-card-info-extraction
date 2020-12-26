@@ -1,4 +1,4 @@
-from utils.common import predict_4_corners, load_model
+from utils.object_recognition_common import predict_4_corners, load_model
 import glob
 import os
 

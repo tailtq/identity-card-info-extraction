@@ -9,28 +9,6 @@ WINDOW_NAME = "example"
 rectangles = []
 pivots = []
 
-categories = [
-    {
-        "id": 5,
-        "name": "identity number",
-    },
-    {
-        "id": 1,
-        "name": "name",
-    },
-    {
-        "id": 2,
-        "name": "birthday",
-    },
-    {
-        "id": 3,
-        "name": "countryside",
-    },
-    {
-        "id": 4,
-        "name": "address",
-    }
-]
 identity_label_positions = [
     [(261, 69), (451, 97)],  # identity number
     [(249, 100), (459, 130)],  # name

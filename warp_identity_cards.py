@@ -5,7 +5,7 @@ import torch
 import cv2
 import numpy as np
 
-from utils.common import predict_4_corners, load_model
+from utils.object_recognition_common import predict_4_corners, load_model
 from utils.datasets import letterbox
 import glob
 import imutils

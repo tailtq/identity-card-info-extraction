@@ -5,13 +5,36 @@ import json
 import torch
 import numpy as np
 import albumentations as albu
+import segmentation_models_pytorch as smp
 from torch.utils.data import Dataset as BaseDataset
 
 CATEGORIES = ['address', 'birthday', 'countryside', 'identity number', 'name']
+categories = [
+    {
+        "id": 5,
+        "name": "identity number",
+    },
+    {
+        "id": 1,
+        "name": "name",
+    },
+    {
+        "id": 2,
+        "name": "birthday",
+    },
+    {
+        "id": 3,
+        "name": "countryside",
+    },
+    {
+        "id": 4,
+        "name": "address",
+    }
+]
 
 
 def load_model():
-    return torch.load('./info_segmentation.pth')
+    return torch.load('./info_segmentation3.pth')
 
 
 class Dataset(BaseDataset):
@@ -36,11 +59,14 @@ class Dataset(BaseDataset):
             classes=None,
             augmentation=None,
             preprocessing=None,
+            image_links=[]
     ):
-        self.ids = os.listdir(images_dir)
-        self.images_fps = glob.glob(f"{images_dir}/*.jpg")
-        self.masks_fps = glob.glob(f"{masks_dir}/*.png")
-        print(masks_dir, len(self.masks_fps))
+        if len(image_links):
+            self.images_fps = image_links
+            self.masks_fps = []
+        else:
+            self.images_fps = glob.glob(f"{images_dir}/*.jpg")
+            self.masks_fps = glob.glob(f"{masks_dir}/*.png")
 
         # convert str names to class values on masks
         self.class_values = [self.CLASSES.index(cls.lower()) for cls in classes]
@@ -79,7 +105,18 @@ class Dataset(BaseDataset):
         return image, mask
 
     def __len__(self):
-        return len(self.ids)
+        return len(self.images_fps)
+
+
+class CocoDataset(Dataset):
+    def __init__(self, coco_data, src_dir, classes=None, augmentation=None, preprocessing=None, from_id=0):
+        image_links = []
+
+        for image in coco_data["images"]:
+            if image["id"] >= from_id:
+                image_links.append(f"{src_dir}/{image['file_name']}")
+
+        super().__init__("", "", classes, augmentation, preprocessing, image_links)
 
 
 def get_validation_augmentation():
@@ -95,6 +132,14 @@ def to_tensor(x, **kwargs):
         return x.transpose(2, 0, 1).astype('float32')
 
     return x.astype('float32')
+
+
+def get_preprocessing_fn():
+    ENCODER = 'vgg13_bn'
+    ENCODER_WEIGHTS = 'imagenet'
+    preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
+
+    return preprocessing_fn
 
 
 def get_preprocessing(preprocessing_fn):
@@ -120,3 +165,22 @@ def write_annotation_file(content, file_name):
     writer = open(file_name, "w+")
     writer.write(json_annotations)
     writer.close()
+
+
+def get_color_map(with_label=False):
+    data = open("labelmap.txt", "r").read()
+    lines = data.split("\n")
+    lines.pop(0)
+    lines.pop(len(lines) - 1)
+
+    color_map = []
+
+    for line in lines:
+        color_map.append([int(color) for color in line.split(":")[1].split(",")])
+
+    color_map = np.array(color_map)
+
+    if with_label:
+        return color_map, [i for i in range(len(color_map))]
+
+    return color_map
