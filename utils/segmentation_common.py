@@ -8,11 +8,10 @@ import albumentations as albu
 import segmentation_models_pytorch as smp
 from torch.utils.data import Dataset as BaseDataset
 
-CATEGORIES = ['address', 'birthday', 'countryside', 'identity number', 'name']
-categories = [
+CATEGORIES_WITH_ID = [
     {
-        "id": 5,
-        "name": "identity number",
+        "id": 0,
+        "name": "background",
     },
     {
         "id": 1,
@@ -29,12 +28,17 @@ categories = [
     {
         "id": 4,
         "name": "address",
-    }
+    },
+    {
+        "id": 5,
+        "name": "identity number",
+    },
 ]
+CATEGORIES = list(map(lambda e: e["name"], CATEGORIES_WITH_ID))
 
 
 def load_model():
-    return torch.load('./info_segmentation3.pth')
+    return torch.load('./info_segmentation.pth')
 
 
 class Dataset(BaseDataset):
@@ -75,7 +79,6 @@ class Dataset(BaseDataset):
         self.preprocessing = preprocessing
 
     def __getitem__(self, i):
-
         # read data
         image = cv2.imread(self.images_fps[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -181,6 +184,37 @@ def get_color_map(with_label=False):
     color_map = np.array(color_map)
 
     if with_label:
-        return color_map, [i for i in range(len(color_map))]
+        return color_map, CATEGORIES_WITH_ID
 
     return color_map
+
+
+# yx
+def get_min_max_x_y(coordinates):
+    min_y, min_x, max_y, max_x = min(coordinates[:, 0]), min(coordinates[:, 1]), max(coordinates[:, 0]), \
+                                 max(coordinates[:, 1])
+
+    return min_x, min_y, max_x, max_y
+
+
+def get_segment(min_x_a, min_y_a, max_x_a, max_y_a, min_x_b=None, min_y_b=None, max_x_b=None, max_y_b=None):
+    if min_x_b is not None:
+        segment = np.array([
+            [min_x_a, min_y_a],
+            [max_x_a, min_y_a],
+            [max_x_a, max_y_a],
+            [max_x_b, min_y_b],
+            [max_x_b, max_y_b],
+            [min_x_b, max_y_b],
+            [min_x_b, min_y_b],
+            [min_x_a, max_y_a],
+        ])
+    else:
+        segment = np.array([
+            [min_x_a, min_y_a],
+            [max_x_a, min_y_a],
+            [max_x_a, max_y_a],
+            [min_x_a, max_y_a],
+        ])
+
+    return segment

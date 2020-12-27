@@ -38,10 +38,7 @@ def convert_img(img, device, half, new_size=416):
     return img
 
 
-def predict_4_corners(img_path, model, resized_width=1080):
-    img = cv2.imread(img_path)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
+def predict_4_corners(img, model, resized_width=1080):
     if resized_width is not None:
         orig_img = imutils.resize(img, width=1080)
     else:
@@ -68,6 +65,48 @@ def predict_4_corners(img_path, model, resized_width=1080):
                 plot_one_box(xyxy, plot_img, label=label, color=COLORS[int(cls)], line_thickness=3)
 
     return result, orig_img, plot_img
+
+
+def filter_redundancy(result):
+    deleted_indexes = []
+
+    for i, element in enumerate(result):
+        category = element[5]
+        max_class_confidence_score = max(result[np.where(result[:, 5] == category)][:, 4])
+
+        if element[4] < max_class_confidence_score:
+            deleted_indexes.append(i)
+
+    return np.delete(result, deleted_indexes, axis=0)
+
+
+def get_center(coordinates):
+    tl_x, tl_y = coordinates[:2]
+    br_x, br_y = coordinates[2:4]
+
+    return round((tl_x + br_x) / 2), round((tl_y + br_y) / 2)
+
+
+def perspective_transform(image, source_points):
+    dest_points = np.float32([[0, 0], [500, 0], [500, 300], [0, 300]])
+    M = cv2.getPerspectiveTransform(source_points, dest_points)
+    dst = cv2.warpPerspective(image, M, (500, 300))
+
+    return dst
+
+
+def warp_identity_card(img, model):
+    result, img, plot_img = predict_4_corners(img, model)
+
+    # filter redundant points by comparing confidence score
+    if len(result) > 4:
+        result = filter_redundancy(result)
+
+    assert len(result) == 4
+    coordinates = np.float32([get_center(result[index]) for index in np.argsort(result[:, 5])])
+    img = perspective_transform(img, coordinates)
+
+    return img
 
 
 def draw_bbox(coordinates, img, classes):

@@ -1,9 +1,8 @@
 import numpy as np
 import cv2
 import glob
-import json
 
-from utils.segmentation_common import write_annotation_file
+from utils.segmentation_common import write_annotation_file, CATEGORIES_WITH_ID
 
 WINDOW_NAME = "example"
 rectangles = []
@@ -94,24 +93,9 @@ if __name__ == "__main__":
     current_id = 1
 
     for img_index, path in enumerate(img_paths):
-        for category_index, category in enumerate(categories):
+        for category_index, category in enumerate(CATEGORIES_WITH_ID):
             positions = identity_label_positions[category_index]
-
             json_annotations.append(get_coco_format(current_id, img_index + 1, category["id"], positions))
-
             current_id += 1
 
     write_annotation_file(json_annotations, "annotations.json")
-
-    # img_paths = glob.glob("dataset/train2/65714583_2267212970262502_1702528472108236800_o.jpg")
-    #
-    # for path in img_paths:
-    #     print(path)
-    #
-    #     img = cv2.imread(path)
-    #     img = append_positions(img, positions=identity_label_positions)
-    #     key = show_image(img)
-    #     print(rectangles)
-    #
-    #     if key == ord("q"):
-    #         break
