@@ -3,7 +3,7 @@ import glob
 import os
 
 if __name__ == "__main__":
-    model = load_model("dataset/best-v1.3.pt")
+    model = load_model("warping_model.pt")
 
     img_paths = glob.glob("dataset/train/*.jpg")
     img_paths = list(filter(lambda img_path: not os.path.exists(img_path.replace(".jpg", ".txt")), img_paths))

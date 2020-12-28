@@ -2,18 +2,19 @@ import os
 import cv2
 import torch
 import numpy as np
-import imutils
 
 from remove_unlabelled_images import get_color_map
 from utils.object_recognition_common import warp_identity_card
 from utils.ocr_common import OCRCommon
-from utils.segmentation_common import Dataset, get_validation_augmentation, get_preprocessing, load_model, CATEGORIES, \
+from utils.segmentation_common import get_validation_augmentation, get_preprocessing, \
     get_preprocessing_fn, get_min_max_x_y
+from utils.object_recognition_common import load_model as load_warping_model
+from utils.segmentation_common import load_model as load_segmentation_model
 
 DEVICE = "cuda"
 ocr_model = OCRCommon()
-segmentation_model = load_model("info_segmentation.pth")
-warping_model = load_model("warping_model.pt")
+warping_model = load_warping_model("warping_model.pt")
+segmentation_model = load_segmentation_model("info_segmentation.pth")
 
 segmentation_preprocessing = get_validation_augmentation()
 segmentation_augmentation = get_preprocessing(get_preprocessing_fn())
@@ -30,23 +31,18 @@ converted_color_map = np.repeat(np.repeat(color_map[:, :, np.newaxis, np.newaxis
 
 if __name__ == "__main__":
     # test dataset without transformations for image visualization
-    img_path = "dataset/test/229ed866573129523ec6ab416286fda0.jpg"
+    img_path = "dataset/Java_Le Van Huy.JPG"
 
     img_name = img_path.split('/')[-1]
     img = cv2.imread(img_path)
     img = warp_identity_card(img, warping_model)
+    img = cv2.resize(img, (480, 480))
     orig_img = img.copy()
 
-    cv2.imshow("Test", orig_img)
-    cv2.waitKey(-1)
-    
-    img = segmentation_augmentation(image=img)
-    img = segmentation_preprocessing(image=img)
-
-
-    # get original image
-    # orig_img = cv2.cvtColor(orig_img, cv2.COLOR_BGR2RGB)
-    # orig_img = cv2.resize(orig_img, (480, 480))
+    sample = segmentation_augmentation(image=img, mask=np.zeros((480, 480, 3), dtype=np.uint8))
+    img = sample["image"]
+    sample = segmentation_preprocessing(image=img, mask=np.zeros((480, 480, 3), dtype=np.uint8))
+    img = sample["image"]
 
     # segment information
     x_tensor = torch.from_numpy(img).to(DEVICE).unsqueeze(0)
@@ -77,10 +73,22 @@ if __name__ == "__main__":
 
             text = ocr_model.predict(white_area1)
             text += " " + ocr_model.predict(white_area2)
+
+            cv2.imshow("Test", white_area1)
+            cv2.waitKey(-1)
+            cv2.imshow("Test", white_area2)
+            cv2.waitKey(-1)
         else:
             text = ocr_model.predict(white_area)
 
+            cv2.imshow("Test", white_area)
+            cv2.waitKey(-1)
+
         print(f"{labels[index]['name']}: {text}")
+
+    orig_img = cv2.cvtColor(orig_img, cv2.COLOR_BGR2BGRA)
+    pr_mask = cv2.cvtColor(pr_mask, cv2.COLOR_BGR2BGRA)
+    orig_img[pr_mask > 0] += (pr_mask[pr_mask > 0] / 4).astype(np.uint8)
 
     cv2.imshow("Test", orig_img)
     cv2.waitKey(-1)
