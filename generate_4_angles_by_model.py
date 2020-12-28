@@ -1,8 +1,6 @@
-from utils.object_recognition_common import predict_4_corners, load_model
+from utils.object_recognition_common import predict_4_corners, load_model, filter_redundancy
 import glob
 import os
-
-from warp_identity_cards import filter_redundancy
 
 if __name__ == "__main__":
     model = load_model("dataset/best-v1.3.pt")

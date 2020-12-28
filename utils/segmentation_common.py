@@ -37,8 +37,8 @@ CATEGORIES_WITH_ID = [
 CATEGORIES = list(map(lambda e: e["name"], CATEGORIES_WITH_ID))
 
 
-def load_model():
-    return torch.load('./info_segmentation.pth')
+def load_model(path):
+    return torch.load(path)
 
 
 class Dataset(BaseDataset):

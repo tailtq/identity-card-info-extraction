@@ -9,7 +9,7 @@ from utils.segmentation_common import get_validation_augmentation, get_preproces
     CocoDataset, get_preprocessing_fn, get_min_max_x_y, get_segment
 
 DEVICE = 'cuda'
-segmentation_model = load_model()
+segmentation_model = load_model("info_segmentation.pth")
 DATA_DIR = './dataset/segmentation/'
 x_test_dir = os.path.join(DATA_DIR, 'test')
 y_test_dir = os.path.join(DATA_DIR, 'testannot')
