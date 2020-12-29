@@ -1,3 +1,3 @@
 # Identity Card's Information Extraction
 
-
+Updating segmentation model..................
