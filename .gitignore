@@ -247,4 +247,5 @@ fabric.properties
 dataset/
 extract-information-from-identity-card/
 Newspaper-Optical-Character-Recognition/
+info_segmentation.pth
 test.json

@@ -60,7 +60,7 @@ if __name__ == "__main__":
     content = json.loads(content)
 
     # index + 1
-    remove_images(content["images"], (1, 295), dataset_path)
+    remove_images(content["images"], (1, 337), dataset_path)
     color_map = get_color_map()
     files = glob.glob(f"{dataset_path}/SegmentationClass/*.png")
 
@@ -71,3 +71,6 @@ if __name__ == "__main__":
         new_destination = file.replace("SegmentationClass", "SegmentationNewClass")
         img = cv2.imread(file)
         convert_rgb_to_indexed_colors(img, color_map, new_destination)
+
+    # generate train + val set
+

@@ -31,7 +31,7 @@ converted_color_map = np.repeat(np.repeat(color_map[:, :, np.newaxis, np.newaxis
 
 if __name__ == "__main__":
     # test dataset without transformations for image visualization
-    img_path = "dataset/Java_Le Van Huy.JPG"
+    img_path = "dataset/BA_Nguyen Thi Phuong Hang.JPG"
 
     img_name = img_path.split('/')[-1]
     img = cv2.imread(img_path)
