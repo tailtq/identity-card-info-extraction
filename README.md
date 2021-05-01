@@ -72,19 +72,28 @@ Please refer to `train-info-segmentation.ipynb` for more information.
 ## Results
 
 Image 1:
+
 ![Image 1](images/test.jpg)
 ![Image 1](images/result_test.png)
 
+---
 
 Image 2:
+
 ![Image 1](images/test2.jpg)
 ![Image 1](images/result_test2.png)
 
+---
+
 Image 3:
+
 ![Image 1](images/test3.jpg)
 ![Image 1](images/result_test3.png)
 
+---
+
 Image 4:
+
 ![Image 1](images/test4.jpg)
 ![Image 1](images/result_test4.png)
 
