@@ -1,11 +1,9 @@
-from utils.object_recognition_common import predict_4_corners, load_model
+from utils.object_recognition_common import predict_4_corners, load_model, filter_redundancy
 import glob
 import os
 
-from warp_identity_cards import filter_redundancy
-
 if __name__ == "__main__":
-    model = load_model("dataset/best-v1.3.pt")
+    model = load_model("warping_model.pt")
 
     img_paths = glob.glob("dataset/train/*.jpg")
     img_paths = list(filter(lambda img_path: not os.path.exists(img_path.replace(".jpg", ".txt")), img_paths))

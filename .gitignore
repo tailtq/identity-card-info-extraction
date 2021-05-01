@@ -1,7 +1,4 @@
 # Repo-specific GitIgnore ----------------------------------------------------------------------------------------------
-*.jpg
-*.jpeg
-*.png
 *.bmp
 *.tif
 *.tiff
@@ -244,7 +241,8 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-dataset
-extract-information-from-identity-card
-Newspaper-Optical-Character-Recognition
-*.pth
+dataset/
+extract-information-from-identity-card/
+Newspaper-Optical-Character-Recognition/
+info_segmentation.pth
+test.json

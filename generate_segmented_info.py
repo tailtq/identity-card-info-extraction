@@ -8,11 +8,8 @@ from remove_unlabelled_images import get_color_map
 from utils.segmentation_common import get_validation_augmentation, get_preprocessing, load_model, CATEGORIES, \
     CocoDataset, get_preprocessing_fn, get_min_max_x_y, get_segment
 
-DEVICE = 'cuda'
-segmentation_model = load_model()
-DATA_DIR = './dataset/segmentation/'
-x_test_dir = os.path.join(DATA_DIR, 'test')
-y_test_dir = os.path.join(DATA_DIR, 'testannot')
+DEVICE = "cuda"
+segmentation_model = load_model("info_segmentation.pth")
 original_size = [500, 300]
 resized_size = [480, 480]
 
@@ -62,7 +59,7 @@ if __name__ == '__main__':
     # test dataset without transformations for image visualization
     test_dataset_vis = CocoDataset(
         json_data,
-        "dataset/train2",
+        "dataset/segmentation_input",
         augmentation=get_validation_augmentation(),
         preprocessing=get_preprocessing(get_preprocessing_fn()),
         classes=CATEGORIES,

@@ -4,7 +4,7 @@ import imutils
 
 from utils.object_recognition_common import load_model, warp_identity_card
 
-model = load_model("dataset/best-v1.3.pt")
+model = load_model("warping_model.pt")
 
 if __name__ == "__main__":
     img_paths = glob.glob("dataset/4_angles_train/*.jpg") + glob.glob("dataset/4_angles_val/*.jpg")
@@ -20,6 +20,7 @@ if __name__ == "__main__":
             img = imutils.resize(img, height=500)
             cv2.imshow("Test", img)
             key = cv2.waitKey(-1)
+
             if key == ord('q'):
                 break
         except ValueError:

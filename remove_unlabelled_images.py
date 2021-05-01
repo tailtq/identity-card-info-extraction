@@ -55,15 +55,14 @@ def convert_rgb_to_indexed_colors(img, color_map, destination):
 
 
 if __name__ == "__main__":
-    dataset_path = "dataset/segmentation"
-    content = open("annotations.json", "r").read()
+    dataset_path = "dataset/segmentation2"
+    content = open("instances_default.json", "r").read()
     content = json.loads(content)
 
     # index + 1
-    remove_images(content["images"], (1, 201), dataset_path)
+    remove_images(content["images"], (1, 337), dataset_path)
     color_map = get_color_map()
     files = glob.glob(f"{dataset_path}/SegmentationClass/*.png")
-    print(color_map)
 
     if not os.path.exists(f"{dataset_path}/SegmentationNewClass"):
         os.mkdir(f"{dataset_path}/SegmentationNewClass")
@@ -72,3 +71,6 @@ if __name__ == "__main__":
         new_destination = file.replace("SegmentationClass", "SegmentationNewClass")
         img = cv2.imread(file)
         convert_rgb_to_indexed_colors(img, color_map, new_destination)
+
+    # generate train + val set
+

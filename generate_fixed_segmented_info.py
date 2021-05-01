@@ -4,6 +4,8 @@ import glob
 
 from utils.segmentation_common import write_annotation_file, CATEGORIES_WITH_ID
 
+# generate default label for class segmentation
+
 WINDOW_NAME = "example"
 rectangles = []
 pivots = []

@@ -1,15 +1,19 @@
-# pip install -r requirements.txt
-
-# base ----------------------------------------
+# yolov5 ----------------------------------------
 Cython
-matplotlib>=3.2.2
-numpy>=1.18.5
-opencv-python>=4.1.2
+matplotlib
+numpy
+opencv-python
 pillow
-PyYAML>=5.3
-scipy>=1.4.1
-tensorboard>=2.2
-torch>=1.6.0
-torchvision>=0.7.0
-tqdm>=4.41.0
+PyYAML
+scipy
+tensorboard
+torch
+torchvision
+tqdm
 imutils
+
+# additional libraries
+albumentations
+segmentation_models_pytorch
+vietocr
+gdown
