@@ -1,4 +1,4 @@
-# base ----------------------------------------
+# yolov5 ----------------------------------------
 Cython
 matplotlib
 numpy
@@ -12,6 +12,8 @@ torchvision
 tqdm
 imutils
 
+# additional libraries
 albumentations
 segmentation_models_pytorch
 vietocr
+gdown

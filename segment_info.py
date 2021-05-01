@@ -1,7 +1,7 @@
-import os
 import cv2
 import torch
 import numpy as np
+import sys
 
 from remove_unlabelled_images import get_color_map
 from utils.object_recognition_common import warp_identity_card
@@ -19,19 +19,13 @@ segmentation_model = load_segmentation_model("info_segmentation.pth")
 segmentation_preprocessing = get_validation_augmentation()
 segmentation_augmentation = get_preprocessing(get_preprocessing_fn())
 
-DATA_DIR = "./dataset/segmentation/"
-x_test_dir = os.path.join(DATA_DIR, "test")
-y_test_dir = os.path.join(DATA_DIR, "testannot")
-original_size = [500, 300]
-resized_size = [480, 480]
-
 color_map, labels = get_color_map(True)
 color_map, labels = color_map[1:], labels[1:]
 converted_color_map = np.repeat(np.repeat(color_map[:, :, np.newaxis, np.newaxis], 480, axis=2), 480, axis=3)
 
 if __name__ == "__main__":
     # test dataset without transformations for image visualization
-    img_path = "dataset/BA_Nguyen Thi Phuong Hang.JPG"
+    img_path = sys.argv[1]
 
     img_name = img_path.split('/')[-1]
     img = cv2.imread(img_path)
@@ -40,8 +34,6 @@ if __name__ == "__main__":
     orig_img = img.copy()
 
     sample = segmentation_augmentation(image=img, mask=np.zeros((480, 480, 3), dtype=np.uint8))
-    img = sample["image"]
-    sample = segmentation_preprocessing(image=img, mask=np.zeros((480, 480, 3), dtype=np.uint8))
     img = sample["image"]
 
     # segment information
@@ -74,15 +66,15 @@ if __name__ == "__main__":
             text = ocr_model.predict(white_area1)
             text += " " + ocr_model.predict(white_area2)
 
-            cv2.imshow("Test", white_area1)
-            cv2.waitKey(-1)
-            cv2.imshow("Test", white_area2)
-            cv2.waitKey(-1)
+            # cv2.imshow("Test", white_area1)
+            # cv2.waitKey(-1)
+            # cv2.imshow("Test", white_area2)
+            # cv2.waitKey(-1)
         else:
             text = ocr_model.predict(white_area)
 
-            cv2.imshow("Test", white_area)
-            cv2.waitKey(-1)
+            # cv2.imshow("Test", white_area)
+            # cv2.waitKey(-1)
 
         print(f"{labels[index]['name']}: {text}")
 
@@ -91,4 +83,5 @@ if __name__ == "__main__":
     orig_img[pr_mask > 0] += (pr_mask[pr_mask > 0] / 4).astype(np.uint8)
 
     cv2.imshow("Test", orig_img)
+    cv2.imwrite(f"images/pred_{img_path.split('/')[-1]}", orig_img)
     cv2.waitKey(-1)

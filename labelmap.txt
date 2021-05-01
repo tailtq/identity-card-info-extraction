@@ -1,7 +1,0 @@
-# label:color_rgb:parts:actions
-background:0,0,0::
-name:51,221,255::
-birthday:250,50,83::
-countryside:52,209,183::
-address:255,96,55::
-identity number:221,255,51::

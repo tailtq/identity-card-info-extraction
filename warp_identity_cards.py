@@ -20,6 +20,7 @@ if __name__ == "__main__":
             img = imutils.resize(img, height=500)
             cv2.imshow("Test", img)
             key = cv2.waitKey(-1)
+
             if key == ord('q'):
                 break
         except ValueError:
